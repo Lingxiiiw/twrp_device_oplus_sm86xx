@@ -97,9 +97,9 @@ QCOM_BOARD_PLATFORMS    += sm86xx
 
 # Recovery
 BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE    := true
-TARGET_RECOVERY_PIXEL_FORMAT                := RGBX_8888
+#TARGET_RECOVERY_PIXEL_FORMAT                := RGBX_8888
 TW_INCLUDE_FASTBOOTD                        := true
-
+TW_DEVICE_MODEL := OnePlus13R
 # Tool
 TW_ENABLE_ALL_PARTITION_TOOLS := true
 TW_INCLUDE_7ZA                := true
