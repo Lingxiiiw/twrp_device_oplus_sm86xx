@@ -147,3 +147,9 @@ TW_LOAD_VENDOR_MODULES                  := "adsp_loader_dlkm.ko goodix_core.ko o
 TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI      := true
 TW_NO_SCREEN_BLANK                      := true
 TW_USE_SERIALNO_PROPERTY_FOR_DEVICE_ID  := true
+
+TW_INPUT_BLACKLIST := "uinput-fpc uinput-goodix hbtp_vm"
+TW_INPUT_BLACKLIST_EXTRAS := "uinput*"
+TW_INPUT_BLACKLIST_INPUT := true
+TARGET_RECOVERY_PIXEL_FORMAT := "RGBA_8888"
+TW_FRAMERATE := 60
