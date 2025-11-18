@@ -1,4 +1,4 @@
-service variant-script /system/bin/variant-script.sh
+service vendor.variant-copy /vendor/bin/variant-copy.sh
     user root
     group root
     oneshot

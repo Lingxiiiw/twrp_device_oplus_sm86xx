@@ -40,9 +40,6 @@ on init
     setprop prepdecrypt.setpatch true
     start vendor.boot-qti
     start vendor.gatekeeper_default
-    start vendor.secure_element
-    start vendor.weaver_nxp
-    start vendor.se_omapi
 
 on property:ro.boot.usbcontroller=*
     setprop sys.usb.controller ${ro.boot.usbcontroller}
@@ -66,6 +63,7 @@ on fs
 
 on post-fs
     start variant-script
+    setprop twrp.variant.files_copied 0
 
 on property:twrp.modules.loaded=true
     # Mount firmware
@@ -76,7 +74,6 @@ on property:twrp.modules.loaded=true
     write /sys/kernel/boot_adsp/ssr 1
     wait /sys/class/power_supply/battery
     start vendor.health-default
-    start vendor.oplus.vibrator
     umount /firmware
 
 on property:ro.crypto.state=encrypted && property:ro.boot.dynamic_partitions=true
@@ -85,3 +82,12 @@ on property:ro.crypto.state=encrypted && property:ro.boot.dynamic_partitions=tru
 on property:servicemanager.ready=true
     setprop sys.boot_completed 1
     start vendor.ssgtzd
+
+on property:crypto.ready=1
+    start vendor.variant-copy
+
+on property:twrp.variant.files_copied=1
+    start vendor.oplus.vibrator
+    start vendor.secure_element
+    start vendor.weaver_nxp
+    start vendor.se_omapi

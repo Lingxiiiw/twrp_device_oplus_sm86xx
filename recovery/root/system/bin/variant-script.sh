@@ -1,17 +1,20 @@
-#!/system/bin/sh
+#!/sbin/sh
 
 variant="$(getprop ro.boot.prjname)"
-echo "$variant"
 
-if command -v resetprop >/dev/null 2>&1; then
-    _setprop_cmd="resetprop"
-else
-    _setprop_cmd="setprop"
-fi
+log_file="/dev/kmsg"
 
-sp() {
-    "$_setprop_cmd" "$1" "$2"
+log() {
+    echo "variant-script.sh: $1" | tee -a "$log_file"
+    echo "variant-script.sh: $1" | tee -a /tmp/recovery.log
 }
+
+umount -f -l /system
+log "/system unmounted"
+umount -f -l /vendor
+log "/vendor unmounted"
+umount -f -l /odm
+log "/odm unmounted"
 
 set_oneplus_common() {
     local usb_name="$1"
@@ -22,23 +25,24 @@ set_oneplus_common() {
 
     echo "$usb_name" > /config/usb_gadget/g1/strings/0x409/product
 
-    sp ro.product.brand "OnePlus"
-    sp ro.product.manufacturer "OnePlus"
-    sp vendor.display.enable_spr "$spr_value"
-    sp ro.product.name "$product_name"
-    sp ro.product.device "$device_code"
-    sp ro.product.system.device "$product_name"
-    sp ro.product.vendor.device "$device_code"
-    sp ro.product.odm.device "$device_code"
-    sp ro.product.product.device "$device_code"
-    sp ro.product.system_ext.device "$device_code"
-    sp ro.product.product.model "$product_name"
-    sp ro.product.model "$product_name"
-    sp ro.product.system.model "$product_name"
-    sp ro.product.system_ext.model "$product_name"
-    sp ro.product.vendor.model "$product_name"
-    sp ro.product.odm.model "$product_name"
-    sp ro.boot.hardware.revision "$region"
+    resetprop ro.product.brand "OnePlus"
+    resetprop ro.product.manufacturer "OnePlus"
+    resetprop vendor.display.enable_spr "$spr_value"
+    resetprop ro.product.name "$product_name"
+    resetprop ro.product.device "$device_code"
+    resetprop ro.product.system.device "$product_name"
+    resetprop ro.product.vendor.device "$device_code"
+    resetprop ro.product.odm.device "$device_code"
+    resetprop ro.product.product.device "$device_code"
+    resetprop ro.product.system_ext.device "$device_code"
+    resetprop ro.product.product.model "$product_name"
+    resetprop ro.product.model "$product_name"
+    resetprop ro.product.system.model "$product_name"
+    resetprop ro.product.system_ext.model "$product_name"
+    resetprop ro.product.vendor.model "$product_name"
+    resetprop ro.product.odm.model "$product_name"
+    resetprop ro.boot.hardware.revision "$region"
+    log "Variant $variant ($device_code) properties all set."
 }
 
 case "$variant" in
@@ -48,23 +52,38 @@ case "$variant" in
         ;;
 
     "23868")
-        # OnePlus 13R (giulia) - CPH2645
+        # OnePlus 13R (giulia)
         set_oneplus_common "Oneplus 13 R" "CPH2645" "OP5D3BL1" "GL" "0"
         ;;
 
     "23869")
-        # OnePlus 13R (giulia) - CPH2647
+        # OnePlus 13R (giulia)
         set_oneplus_common "Oneplus 13 R" "CPH2647" "OP5D3BL1" "NA" "0"
         ;;
 
     "23867")
-        # OnePlus 13R (giulia) - CPH2691
+        # OnePlus 13R (giulia)
         set_oneplus_common "Oneplus 13 R" "CPH2691" "OP5D3BL1" "IN" "0"
+        ;;
+
+    "23803")
+        # OnePlus ACE 3 V (audi)
+        set_oneplus_common "Oneplus ACE 3 V" "PJF110" "OP5CFBL1" "CN" "0"
+        ;;
+
+    "24211")
+        # OnePlus NORD 4 (audi)
+        set_oneplus_common "Oneplus NORD 4" "CPH2661" "OP5E93L1" "IN" "0"
+        ;;
+
+    "23814")
+        # OnePlus ACE 3 PRO (corvette)
+        set_oneplus_common "Oneplus ACE 3 Pro" "PJX110" "OP5D06L1" "CN" "0"
         ;;
 
     *)
         # Unknown variant
-        echo "Unknown variant: $variant" >&2
+        log "Unknown variant: $variant"
         ;;
 esac
 
